@@ -6,7 +6,6 @@ module.exports = {
 		return new Promise(async (resolve, reject) => {
 			const client_id = process.env["CLIENT_ID"];
 			const client_secret = process.env["CLIENT_SECRET"];
-
 			console.log("Waiting for token...");
 			axios({
 				method: "POST",
@@ -25,13 +24,35 @@ module.exports = {
 				reject(err);
 			});
 		});
+	},
+	test: () => {
+		return new Promise(async (resolve, reject) => {
+			axios({
+				method: "GET",
+				url: "https://api.twitch.tv/helix/",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: "Bearer " + global.access_token
+				}
+			})
+			.then((res) => {
+				console.log(JSON.stringify(data, null, 4));
+				resolve(res.data);
+			})
+			.catch((err) => {
+				console.error(err);
+				reject(err);
+			})
+		})
 	}
 }
 
 async function main() {
 	const getAppToken = require("./index").getAppToken();
+	const test = require("./index").test();
 	console.log("cool");
-	getAppToken;
+	global.access_token = getAppToken;
+	test;
 }
 
 main();
