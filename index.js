@@ -29,14 +29,15 @@ module.exports = {
 		return new Promise(async (resolve, reject) => {
 			axios({
 				method: "GET",
-				url: "https://api.twitch.tv/helix/",
+				url: "https://api.twitch.tv/helix/users?login=neryss002",
 				headers: {
+					"Client-ID": process.env["CLIENT_ID"],
 					"Content-Type": "application/json",
-					Authorization: "Bearer " + global.access_token
+					Authorization: "Bearer " + global.app_token.access_token
 				}
 			})
 			.then((res) => {
-				console.log(JSON.stringify(data, null, 4));
+				console.log(res.data);
 				resolve(res.data);
 			})
 			.catch((err) => {
@@ -48,11 +49,11 @@ module.exports = {
 }
 
 async function main() {
-	const getAppToken = require("./index").getAppToken();
-	const test = require("./index").test();
+	const getAppToken = await require("./index").getAppToken();
 	console.log("cool");
-	global.access_token = getAppToken;
-	test;
+	console.log(getAppToken);
+	global.app_token = getAppToken;
+	await require("./index").test();
 }
 
 main();
