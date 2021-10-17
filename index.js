@@ -83,7 +83,7 @@ async function main() {
 	console.log(getAppToken);
 	global.app_token = getAppToken;
 	await require("./index").getUserInfos();
-	await require("./index").testSub();
+	// await require("./index").testSub();
 }
 
 main();
