@@ -25,11 +25,11 @@ module.exports = {
 			});
 		});
 	},
-	test: () => {
+	getUserInfos: () => {
 		return new Promise(async (resolve, reject) => {
 			axios({
 				method: "GET",
-				url: "https://api.twitch.tv/helix/users?login=neryss002",
+				url: `https://api.twitch.tv/helix/users?login=${process.env["CHANNEL_NAME"]}`,
 				headers: {
 					"Client-ID": process.env["CLIENT_ID"],
 					"Content-Type": "application/json",
@@ -45,6 +45,35 @@ module.exports = {
 				reject(err);
 			})
 		})
+	},
+	testSub: () => {
+		return new Promise(async (resolve, reject) => {
+			axios({
+				method: "POST",
+				url: `https://api.twitch.tv/helix/eventsub/subscriptions`,
+				headers: {
+					"Client-ID": process.env["CLIENT_ID"],
+					"Content-type": "application/json",
+					Authorization: "Bearer " + global.app_token.access_token
+				},
+				data: {
+					type: "stream.online",
+					version: "1",
+					condition: {
+						broadcaster_user_id: provess.env["CHANNEL_NAME"]
+					},
+					transport: {
+						method: "webhook"
+					}
+				}
+			}).then((res) => {
+				console.log(res.data);
+				resolve(res.data);
+			}).catch ((err) => {
+				console.error(err);
+				reject(err);
+			})
+		})
 	}
 }
 
@@ -53,7 +82,8 @@ async function main() {
 	console.log("cool");
 	console.log(getAppToken);
 	global.app_token = getAppToken;
-	await require("./index").test();
+	await require("./index").getUserInfos();
+	await require("./index").testSub();
 }
 
 main();
