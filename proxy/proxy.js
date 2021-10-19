@@ -42,6 +42,12 @@ https
 				var host = domain.split(":")[0];
 				if (host == `api.${domainName}`)
 					target = { host: "localhost", port: "3000" };
+				else if (host == `discord.${domainName}`)
+				{
+					res.writeHead(301, { Location: "https://discord.gg/vyyucAsEr8"} );
+					res.end();
+					return ;
+				}
 				// else if (host == `twitch.${domainName}`)
 				// 	target = {
 				// 		host:
