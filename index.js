@@ -90,18 +90,18 @@ module.exports = {
 				},
 			})
 		})
-			.then((res) => {
-				resolve(res.data);
-			}).catch((error) => {
-				console.error(error);
-				reject(error);
-			});
+		.then((res) => {
+			resolve(res.data);
+		}).catch((error) => {
+			console.error(error);
+			reject(error);
+		});
 	},
 	verifySignature: (messageSignature, messageID, messageTimestamp, body) => {
 		let message = messageID + messageTimestamp + body;
 		let signature = crypto
-			.createHmac("sha256", sha256(process.env["HOSTNAME"]))
-			.update(message);
+		.createHmac("sha256", sha256(process.env["HOSTNAME"]))
+		.update(message);
 		let expectedSignatureHeader = "sha256=" + signature.digest("hex");
 		return expectedSignatureHeader === messageSignature;
 	},
@@ -112,42 +112,42 @@ module.exports = {
 				require("./index").getChannel(data.broadcaster_user_id)
 			]);
 			let channel = fetched[0].data[0];
-
+			
 			let embed = new discord.MessageEmbed();
 			embed.setColor("PURPLE");
 			embed.setTitle(channel.title);
 			embed.setURL(`https://twitch.tv/${channel.broadcaster_login}`);
 			embed.setDescription(
 				`${channel.broadcaster_name} est en live sur ${channel.game_name}`
-			);
-			embed.setThumbnail(user.profile_image_url);
-			embed.setTimestamp(Date.now());
-			await webhook.send({ embeds: [embed] });
-			await webhook.send(`<@&${process.env["DISCORD_ROLE_NOTIF_LIVE"]}>`);
-			resolve();
-		});
-	},
-	subRegister: (userId, type) => {
-		return new Promise(async (resolve, reject) => {
-			axios({
-				method: "POST",
-				url: "https://api.twitch.tv/helix/eventsub/subscriptions",
-				headers: {
-					"Content-Type": "application/json",
-					"Client-ID": process.env["CLIENT_ID"],
-					Authorization: "Bearer " + global.appToken.access_token,
-				},
-				data: {
-					type: type,
-					version: "1",
-					condition: {broadcaster_user_id: userId},
-					transport: {
-						method: "webhook",
-						callback: `https://${process.env["HOSTNAME"]}/notification`,
-						secret: sha256(process.env["HOSTNAME"]),
+				);
+				embed.setThumbnail(user.profile_image_url);
+				embed.setTimestamp(Date.now());
+				await webhook.send({ embeds: [embed] });
+				await webhook.send(`<@&${process.env["DISCORD_ROLE_NOTIF_LIVE"]}>`);
+				resolve();
+			});
+		},
+		subRegister: (userId, type) => {
+			return new Promise(async (resolve, reject) => {
+				axios({
+					method: "POST",
+					url: "https://api.twitch.tv/helix/eventsub/subscriptions",
+					headers: {
+						"Content-Type": "application/json",
+						"Client-ID": process.env["CLIENT_ID"],
+						Authorization: "Bearer " + global.appToken.access_token,
 					},
-				},
-			})
+					data: {
+						type: type,
+						version: "1",
+						condition: {broadcaster_user_id: userId},
+						transport: {
+							method: "webhook",
+							callback: `https://${process.env["HOSTNAME"]}/notification`,
+							secret: sha256(process.env["HOSTNAME"]),
+						},
+					},
+				})
 				.then((res) => {
 					console.info(`EVENT : ${type} registed for user ${userId}`);
 					resolve();
@@ -164,76 +164,72 @@ module.exports = {
 						reject(error);
 					}
 				});
-		});
-	},
-	streamRegister: (userId) => {
-		return new Promise(async (resolve, reject) => {
-			try {
-				await require("./index").subRegister(userId, "stream.online");
-				resolve();
-			}
-			catch (error) {
-				console.error(error);
-				reject(error);
-			}
-		});
-	}
-}
-
-async function main() {
-	const getAppToken = await require("./index").getAppToken();
-	console.log("cool");
-	console.log(getAppToken);
-	global.app_token = getAppToken;
-	await require("./index").getUserInfos();
-	const app = express();
-
-	app.use(
-		express.json({
-			verify: (req, res, buf) => {
-				req.rawBody = buf;
-			},
-		})
-	);
-	app.get("/notifications", async (req, res) => {
-		if (process.env["DEBUG"] == "true" || require("./index").verifySignature(
-			req.header("Twitch-Eventsub-Message-Signature"),
-			req.header("Twitch-Eventsub-Message-Id"),
-			req.header("Twitch-Eventsub-Message-Timestamp"),
-			req.rawBody
-		))
-		{
-			if (req.header("Twitch-Eventsub-Message-Type") ===
-				"webhook_callback_verification")
-			{
-				res.send(req.body.challenge);
-			}
-			else if (req.header("Twitch-Eventsub-Message-Type") === "notification")
-			{
+			});
+		},
+		streamRegister: (userId) => {
+			return new Promise(async (resolve, reject) => {
 				try {
-					switch (req.body.subscription.type) {
-						case "stream.online":
-							await require("./index").streamOnHandle(req.body.event);
-						default:
-							console.warn(`Unhandled error : ${req.body.subscription.type}`);
-							break;
-					}
-					res.send("ok");
+					await require("./index").subRegister(userId, "stream.online");
+					resolve();
 				}
 				catch (error) {
 					console.error(error);
-					res.status(500).send("Internal error");
+					reject(error);
 				}
+			});
+		}
+	}
+	
+	async function main() {
+		const getAppToken = await require("./index").getAppToken();
+		console.log("cool");
+		console.log(getAppToken);
+		global.app_token = getAppToken;
+		await require("./index").getUserInfos();
+		const app = express();
+		
+		app.use(
+			express.json({
+				verify: (req, res, buf) => {
+					req.rawBody = buf;
+				},
+			})
+			);
+			app.get("/notification", async (req, res) => {
+				if (process.env["DEBUG"] == "true" || require("./index").verifySignature(
+					req.header("Twitch-Eventsub-Message-Signature"),
+					req.header("Twitch-Eventsub-Message-Id"),
+					req.header("Twitch-Eventsub-Message-Timestamp"),
+					req.rawBody
+					)) {
+						if (req.header("Twitch-Eventsub-Message-Type") ===
+						"webhook_callback_verification") {
+							res.send(req.body.challenge);
+						}
+						else if (req.header("Twitch-Eventsub-Message-Type") === "notification")
+						{
+							try {
+								switch (req.body.subscription.type) {
+									case "stream.online":
+									await require("./index").streamOnHandle(req.body.event);
+									default:
+									console.warn(`Unhandled error : ${req.body.subscription.type}`);
+									break;
+								}
+								res.send("ok");
+							} catch (error) {
+								console.error(error);
+								res.status(500).send("Internal error");
+							}
+						}
+					}
+					else {
+						res.status(403).send("Forbidden");
+					}
+				});
+				app.listen(process.env["ENV"], () => {
+					console.info(`Event server listening on port : ${process.env["PORT"]}`);
+				});
 			}
-		}
-		else
-		{
-			res.status(403).send("Forbidden");
-		}
-	});
-	app.listen(process.env["ENV"], () => {
-		console.info(`Event server listening on port : ${process.env["PORT"]}`);
-	});
-}
-
-main();
+			
+			main();
