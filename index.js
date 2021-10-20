@@ -1,5 +1,6 @@
 require('dotenv').config();
 const axios = require('axios').default;
+const express = require('express');
 
 module.exports = {
 	getAppToken: () => {
@@ -74,7 +75,34 @@ module.exports = {
 				reject(err);
 			})
 		})
-	}
+	},
+	getChannel: (channelId) => {
+		return new Promise(async (resolve, reject) => {
+			axios({
+				method: "GET",
+				url: `https://api.twitch.tv/helix/channels?broadcaster_id=${channelId}`,
+				headers: {
+					"Content-Type": "application/json",
+					"Client-ID": process.env["CLIENT_ID"],
+					Authorization: "Bearer " + global.appToken.access_token,
+				},
+			})
+		})
+			.then((res) => {
+				resolve(res.data);
+			}).catch((error) => {
+				console.error(error);
+				reject(error);
+			});
+	},
+	verifySignature: (messageSignature, messageID, messageTimestamp, body) => {
+		let message = messageID + messageTimestamp + body;
+		let signature = crypto
+			.createHmac("sha256", sha256(process.env["HOSTNAME"]))
+			.update(message);
+		let expectedSignatureHeader = "sha256=" + signature.digest("hex");
+		return expectedSignatureHeader === messageSignature;
+	},
 }
 
 async function main() {
@@ -83,6 +111,43 @@ async function main() {
 	console.log(getAppToken);
 	global.app_token = getAppToken;
 	await require("./index").getUserInfos();
+	const app = express();
+
+	app.use(
+		express.json({
+			verify: (req, res, buf) => {
+				req.rawBody = buf;
+			},
+		})
+	);
+	app.get("/notifications", async (req, res) => {
+		if (process.env["DEBUG"] == "true" || require("./index").verifySignature(
+			req.header("Twitch-Eventsub-Message-Signature"),
+			req.header("Twitch-Eventsub-Message-Id"),
+			req.header("Twitch-Eventsub-Message-Timestamp"),
+			req.rawBody
+		))
+		{
+			if (req.header("Twitch-Eventsub-Message-Type") ===
+				"webhook_callback_verification")
+			{
+				res.send(req.body.challenge);
+			}
+			else if (req.header("Twitch-Eventsub-Message-Type") === "notification")
+			{
+				try {
+					switch (req.body.subscription.type) {
+						case "stream.online":
+							await require 
+					}
+				}
+			}
+		}
+		else
+		{
+			res.status(403).send("Forbidden");
+		}
+	})
 	// await require("./index").testSub();
 }
 
