@@ -1,6 +1,8 @@
 require('dotenv').config();
 const axios = require('axios').default;
 const express = require('express');
+const discord = require('discord.js');
+const sha256 = require("sha256");
 
 module.exports = {
 	getAppToken: () => {
@@ -103,6 +105,71 @@ module.exports = {
 		let expectedSignatureHeader = "sha256=" + signature.digest("hex");
 		return expectedSignatureHeader === messageSignature;
 	},
+	streamOnHandle: (data) => {
+		return new Promise(async (resolve, reject) => {
+			const webhook = new discord.WebhookClient({url: proccess.env["DISCORD_WEBHOOK_ANNOUNCES"]});
+			let fetched = await Promise.all([
+				require("./index").getChannel(data.broadcaster_user_id)
+			]);
+			let channel = fetched[0].data[0];
+
+			let embed = new discord.MessageEmbed();
+			let embed = new discord.MessageEmbed();
+			embed.setColor("PURPLE");
+			embed.setTitle(channel.title);
+			embed.setURL(`https://twitch.tv/${channel.broadcaster_login}`);
+			embed.setDescription(
+				`${channel.broadcaster_name} est en live sur ${channel.game_name}`
+			);
+			embed.setThumbnail(user.profile_image_url);
+			embed.setTimestamp(Date.now());
+			await webhook.send({ embeds: [embed] });
+			await webhook.send(`<@&${process.env["DISCORD_ROLE_NOTIF_LIVE"]}>`);
+			resolve();
+		});
+	},
+	subRegister: (userId, type) => {
+		return new Promise(async (resolve, reject) => {
+			axios({
+				method: "POST",
+				url: "https://api.twitch.tv/helix/eventsub/subscriptions",
+				headers: {
+					"Content-Type": "application/json",
+					"Client-ID": process.env["CLIENT_ID"],
+					Authorization: "Bearer " + global.appToken.access_token,
+				},
+				data: {
+					type: type,
+					version: "1",
+					condition: {broadcaster_user_id: userId},
+					transport: {
+						method: "webhook",
+						callback: `https://${process.env["HOSTNAME"]}/notification`,
+						secret: sha256(process.env["HOSTNAME"]),
+					},
+				},
+			})
+				.then((res) => {
+					console.info(`EVENT : ${type} registed for user ${userId}`);
+					resolve();
+				})
+				.catch((error) => {
+					if (error.response.data.message == "subscription already exists")
+					{
+						console.info(`${type} already registered for ${userId}`);
+						resolve();
+					}
+					else
+					{
+						console.error(error);
+						reject(error);
+					}
+				});
+		});
+	},
+	streamRegister: (userId) => {
+		
+	}
 }
 
 async function main() {
@@ -138,7 +205,7 @@ async function main() {
 				try {
 					switch (req.body.subscription.type) {
 						case "stream.online":
-							await require 
+							// await require 
 					}
 				}
 			}
