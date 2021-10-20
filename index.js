@@ -80,22 +80,24 @@ module.exports = {
 	},
 	getChannel: (channelId) => {
 		return new Promise(async (resolve, reject) => {
+			console.log("Before axios");
 			axios({
 				method: "GET",
 				url: `https://api.twitch.tv/helix/channels?broadcaster_id=${channelId}`,
 				headers: {
 					"Content-Type": "application/json",
 					"Client-ID": process.env["CLIENT_ID"],
-					Authorization: "Bearer " + global.appToken.access_token,
+					Authorization: "Bearer " + global.app_token.access_token,
 				},
 			})
+			.then((res) => {
+				console.log("aled");
+				resolve(res.data);
+			}).catch((error) => {
+				console.error(error);
+				reject(error);
+			});
 		})
-		.then((res) => {
-			resolve(res.data);
-		}).catch((error) => {
-			console.error(error);
-			reject(error);
-		});
 	},
 	verifySignature: (messageSignature, messageID, messageTimestamp, body) => {
 		let message = messageID + messageTimestamp + body;
@@ -105,13 +107,35 @@ module.exports = {
 		let expectedSignatureHeader = "sha256=" + signature.digest("hex");
 		return expectedSignatureHeader === messageSignature;
 	},
+	getUserById:(userId) => {
+		return new Promise((resolve, reject) => {
+			axios({
+				method: "GET",
+				url: `https://api.twitch.tv/helix/users?id=${userId}`,
+				headers: {
+					"Content-Type": "application/json",
+					"Client-ID": process.env["CLIENT_ID"],
+					Authorization: "Bearer " + global.app_token.access_token,
+				},
+			})
+			.then((res) => {
+				console.log("aled");
+				resolve(res.data);
+			}).catch((error) => {
+				console.error(error);
+				reject(error);
+			});
+		})
+	},
 	streamOnHandle: (data) => {
 		return new Promise(async (resolve, reject) => {
-			const webhook = new discord.WebhookClient({url: proccess.env["DISCORD_WEBHOOK_ANNOUNCES"]});
+			const webhook = new discord.WebhookClient({url: process.env["DISCORD_WEBHOOK_ANNOUNCES"]});
 			let fetched = await Promise.all([
-				require("./index").getChannel(data.broadcaster_user_id)
+				require("./index").getChannel(data.broadcaster_user_id),
+				require("./index").getUserById(data.broadcaster_user_id),
 			]);
 			let channel = fetched[0].data[0];
+			let user = fetched[1].data[0];
 			
 			let embed = new discord.MessageEmbed();
 			embed.setColor("PURPLE");
@@ -135,7 +159,7 @@ module.exports = {
 					headers: {
 						"Content-Type": "application/json",
 						"Client-ID": process.env["CLIENT_ID"],
-						Authorization: "Bearer " + global.appToken.access_token,
+						Authorization: "Bearer " + global.app_token.access_token,
 					},
 					data: {
 						type: type,
@@ -182,7 +206,6 @@ module.exports = {
 	
 	async function main() {
 		const getAppToken = await require("./index").getAppToken();
-		console.log("cool");
 		console.log(getAppToken);
 		global.app_token = getAppToken;
 		await require("./index").getUserInfos();
@@ -195,7 +218,9 @@ module.exports = {
 				},
 			})
 			);
-			app.get("/notification", async (req, res) => {
+			await require("./index").streamRegister(process.env["CHANNEL_ID"]);
+			app.post("/notification", async (req, res) => {
+				console.log("Salut !");
 				if (process.env["DEBUG"] == "true" || require("./index").verifySignature(
 					req.header("Twitch-Eventsub-Message-Signature"),
 					req.header("Twitch-Eventsub-Message-Id"),
@@ -211,10 +236,11 @@ module.exports = {
 							try {
 								switch (req.body.subscription.type) {
 									case "stream.online":
-									await require("./index").streamOnHandle(req.body.event);
+										await require("./index").streamOnHandle(req.body.event);
+										break
 									default:
-									console.warn(`Unhandled error : ${req.body.subscription.type}`);
-									break;
+										console.warn(`Unhandled error : ${req.body.subscription.type}`);
+										break;
 								}
 								res.send("ok");
 							} catch (error) {
@@ -227,9 +253,10 @@ module.exports = {
 						res.status(403).send("Forbidden");
 					}
 				});
-				app.listen(process.env["ENV"], () => {
+				app.listen(process.env["PORT"], () => {
 					console.info(`Event server listening on port : ${process.env["PORT"]}`);
 				});
+
 			}
 			
 			main();

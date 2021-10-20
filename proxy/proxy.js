@@ -50,14 +50,14 @@ https
 				}
 				// else if (host == `twitch.${domainName}`)
 				// 	target = {}
-				// else if (host == `twitch.${domainName}`)
-				// 	target = {
-				// 		host:
-				// 			process.env["NODE_ENV"] == "debug"
-				// 				? "192.168.1.24"
-				// 				: "localhost",
-				// 		port: "4000",
-				// 	};
+				else if (host == `twitch.${domainName}`)
+					target = {
+						host:
+							// process.env["NODE_ENV"] == "debug"
+							// 	? "192.168.1.24"
+								"localhost",
+						port: "4000",
+					};
 				else if (host == domainName)
 					target = { host: "localhost", port: "3000" };
 				else {
