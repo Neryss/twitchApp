@@ -168,7 +168,16 @@ module.exports = {
 		});
 	},
 	streamRegister: (userId) => {
-		
+		return new Promise(async (resolve, reject) => {
+			try {
+				await require("./index").subRegister(userId, "stream.online");
+				resolve();
+			}
+			catch (error) {
+				console.error(error);
+				reject(error);
+			}
+		});
 	}
 }
 
@@ -205,8 +214,16 @@ async function main() {
 				try {
 					switch (req.body.subscription.type) {
 						case "stream.online":
-							// await require 
+							await require("./index").streamOnHandle(req.body.event);
+						default:
+							console.warn(`Unhandled error : ${req.body.subscription.type}`);
+							break;
 					}
+					res.send("ok");
+				}
+				catch (error) {
+					console.error(error);
+					res.status(500).send("Internal error");
 				}
 			}
 		}
@@ -214,8 +231,10 @@ async function main() {
 		{
 			res.status(403).send("Forbidden");
 		}
-	})
-	// await require("./index").testSub();
+	});
+	app.listen(process.env["ENV"], () => {
+		console.info(`Event server listening on port : ${process.env["PORT"]}`);
+	});
 }
 
 main();
