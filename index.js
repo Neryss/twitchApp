@@ -114,7 +114,6 @@ module.exports = {
 			let channel = fetched[0].data[0];
 
 			let embed = new discord.MessageEmbed();
-			let embed = new discord.MessageEmbed();
 			embed.setColor("PURPLE");
 			embed.setTitle(channel.title);
 			embed.setURL(`https://twitch.tv/${channel.broadcaster_login}`);
