@@ -18,7 +18,7 @@ async function main() {
 	await require("./events/stream_on").streamRegister(process.env["CHANNEL_ID"]);
 	app.post("/notification", async (req, res) => {
 		console.log("Salut !");
-		if (process.env["DEBUG"] == "true" || require("./index").verifySignature(
+		if (process.env["DEBUG"] == "true" || require("./events/twitch_security").verifySignature(
 			req.header("Twitch-Eventsub-Message-Signature"),
 			req.header("Twitch-Eventsub-Message-Id"),
 			req.header("Twitch-Eventsub-Message-Timestamp"),
