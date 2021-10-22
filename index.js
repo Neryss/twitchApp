@@ -17,7 +17,7 @@ async function main() {
 	);
 	await require("./events/stream_on").streamRegister(process.env["CHANNEL_ID"]);
 	await require("./events/follows").register(process.env["CHANNEL_ID"]);
-	console.log(await require("./events/subscriptions").list(true));
+	// console.log(await require("./events/subscriptions").list(true));
 	app.post("/notification", async (req, res) => {
 		console.log("Salut !");
 		if (process.env["DEBUG"] == "true" || require("./events/twitch_security").verifySignature(
@@ -36,9 +36,10 @@ async function main() {
 					switch (req.body.subscription.type) {
 						case "stream.online":
 							await require("./events/stream_on").streamOnHandle(req.body.event);
-							break
+							break;
 						case "channel.follow":
 							console.log("Follow!");
+							break;
 						default:
 							console.warn(`Unhandled error : ${req.body.subscription.type}`);
 							break;
