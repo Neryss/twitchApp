@@ -26,16 +26,15 @@ async function main() {
 			req.header("Twitch-Eventsub-Message-Timestamp"),
 			req.rawBody
 		)) {
-			console.log("Je suis apres la verif");
-			if (req.header("Twitch-Eventsub-Message-Type") ===
-			"webhook_callback_verification") {
+			console.info("notification received");
+			if (req.header("Twitch-Eventsub-Message-Type") === "webhook_callback_verification") {
 				res.send(req.body.challenge);
 			}
 			else if (req.header("Twitch-Eventsub-Message-Type") === "notification") {
 				try {
 					switch (req.body.subscription.type) {
 						case "stream.online":
-							await require("./events/stream_on").streamOnHandle(req.body.event);
+							await require("./events/stream_on").handle(req.body.event);
 							break;
 						case "channel.follow":
 							console.log("Follow!");

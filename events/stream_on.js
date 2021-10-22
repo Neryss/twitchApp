@@ -13,7 +13,7 @@ module.exports = {
 			}
 		});
 	},
-	streamOnHandle: (data) => {
+	handle: (data) => {
 		return new Promise(async (resolve, reject) => {
 			const webhook = new discord.WebhookClient({url: process.env["DISCORD_WEBHOOK_ANNOUNCES"]});
 			let fetched = await Promise.all([
@@ -30,7 +30,7 @@ module.exports = {
 			embed.setThumbnail(user.profile_image_url);
 			embed.setTimestamp(Date.now());
 			await webhook.send({ embeds: [embed] });
-			// await webhook.send(`<@&${process.env["DISCORD_ROLE_NOTIF_LIVE"]}>`);
+			await webhook.send(`<@&${process.env["DISCORD_ROLE_NOTIF_LIVE"]}>`);
 			resolve();
 		});
 	},
