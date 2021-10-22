@@ -4,7 +4,7 @@ module.exports = {
 	streamRegister: (userId) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				await require("./subscriptions").subRegister(userId, "stream.online");
+				await require("./subscriptions").register(userId, "stream.online");
 				resolve();
 			}
 			catch (error) {

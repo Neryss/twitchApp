@@ -2,7 +2,7 @@ const axios = require('axios').default;
 const sha256 = require('sha256');
 
 module.exports = {
-	subRegister: (userId, type) => {
+	register: (userId, type) => {
 		return new Promise(async (resolve, reject) => {
 			axios({
 				method: "POST",
@@ -40,5 +40,27 @@ module.exports = {
 				}
 			});
 		});
-	}
+	},
+	list: (all = false) => {
+		return new Promise((resolve, reject) => {
+			axios({
+				method: "GET",
+				url: `https://api.twitch.tv/helix/eventsub/subscriptions${
+					all ? "" : "?status=enabled"
+				}`,
+				headers: {
+					"Content-Type": "application/json",
+					"Client-ID": process.env["CLIENT_ID"],
+					Authorization: "Bearer " + global.app_token.access_token,
+				},
+			})
+				.then((res) => {
+					resolve(res.data);
+				})
+				.catch((error) => {
+					console.error(error);
+					reject(error);
+				});
+		});
+	},
 }
