@@ -70,6 +70,7 @@ module.exports = {
 						},
 					})
 						.then((data) => {
+							console.log("Treating data");
 							res.send("ok");
 							fs.writeFileSync(
 								"./.token.json",
