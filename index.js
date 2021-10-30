@@ -40,9 +40,10 @@ async function main() {
 						case "channel.follow":
 							console.log("Follow!");
 							break;
-						case "channel.channel_points_custom_reward_redemption.add":
-							await require("./events/channel_points").handle(req.body.event);
-							break;
+						// case "channel.channel_points_custom_reward_redemption.add":
+						// 	console.log("Hihi je suis là");
+						// 	await require("./events/channel_points").handle(req.body.event);
+						// 	break;
 						default:
 							console.warn(`Unhandled error : ${req.body.subscription.type}`);
 							break;
