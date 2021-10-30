@@ -17,7 +17,7 @@ async function main() {
 	);
 	await require("./events/stream_on").streamRegister(process.env["CHANNEL_ID"]);
 	await require("./events/follows").register(process.env["CHANNEL_ID"]);
-	await require("./events/channel_points").register(process.env["CHANNEL_ID"]);
+	// await require("./events/channel_points").register(process.env["CHANNEL_ID"]);
 	// console.log(await require("./events/subscriptions").list(true));
 	app.post("/notification", async (req, res) => {
 		console.log("Salut !");
