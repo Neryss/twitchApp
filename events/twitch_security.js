@@ -1,6 +1,7 @@
 const sha256 = require('sha256');
 const crypto = require('node:crypto');
 const express = require("express");
+const axios = require("axios");
 const fs = require("fs");
 
 module.exports = {
@@ -39,7 +40,7 @@ module.exports = {
 						await module.exports.userTokenValidate(content);
 						resolve(await module.exports.refreshToken(content));
 					} catch (error) {
-						console.error(error);
+						console.error("error" + error);
 						newToken();
 					}
 				} else {
@@ -47,13 +48,15 @@ module.exports = {
 				}
 			} else newToken();
 			function newToken() {
+				console.log("ALED");
 				function getAuthUrl() {
 					return `https://id.twitch.tv/oauth2/authorize?client_id=${
-						process.env["TWITCH_CLIENT_ID"]
+						process.env["CLIENT_ID"]
 					}&redirect_uri=${
 						process.env["TWITCH_OAUTH_REDIRECT"]
 					}&response_type=code&scope=${encodeURI(scopes.join(" "))}`;
 				}
+				console.log("ALED DONE");
 				app.get("/auth", async (req, res) => {
 					axios({
 						method: "POST",
