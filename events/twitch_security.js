@@ -1,5 +1,7 @@
 const sha256 = require('sha256');
 const crypto = require('node:crypto');
+const express = require("express");
+const fs = require("fs");
 
 module.exports = {
 	verifySignature: (messageSignature, messageID, messageTimestamp, body) => {

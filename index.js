@@ -1,20 +1,21 @@
 require('dotenv').config();
-const cron = require('node-cron');
-const express = require('express');
+const express = require("express");
+const cron = require("cron");
 	
 async function main() {
 	const getAppToken = await require("./events/getters").getAppToken();
 	console.log(getAppToken);
 	global.app_token = await getAppToken;
-	global.userToken = await require("./events/twitch_security").getUserToken();
+	// global.userToken = await require("./events/twitch_security").getUserToken();
+	// console.log("User token done");
 	await require("./events/getters").getUserInfos();
 
-	cron.schedule("0 */2 * * *", async () => {
-		global.appToken = await require("./lib/twitchSecurity").getAppToken();
-		global.userToken = await require("./lib/twitchSecurity").refreshToken(
-			global.userToken
-		);
-	});
+	// cron.schedule("0 */2 * * *", async () => {
+	// 	global.appToken = await require("./lib/twitchSecurity").getAppToken();
+	// 	global.userToken = await require("./lib/twitchSecurity").refreshToken(
+	// 		global.userToken
+	// 	);
+	// });
 
 	const app = express();
 	
@@ -50,10 +51,10 @@ async function main() {
 						case "channel.follow":
 							console.log("Follow!");
 							break;
-						// case "channel.channel_points_custom_reward_redemption.add":
-						// 	console.log("Hihi je suis là");
-						// 	await require("./events/channel_points").handle(req.body.event);
-						// 	break;
+						case "channel.channel_points_custom_reward_redemption.add":
+							console.log("Hihi je suis là");
+							await require("./events/channel_points").handle(req.body.event);
+							break;
 						default:
 							console.warn(`Unhandled error : ${req.body.subscription.type}`);
 							break;
