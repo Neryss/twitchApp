@@ -17,6 +17,7 @@ async function main() {
 	);
 	await require("./events/stream_on").streamRegister(process.env["CHANNEL_ID"]);
 	await require("./events/follows").register(process.env["CHANNEL_ID"]);
+	await require("./events/channel_points").register(process.env["CHANNEL_ID"]);
 	// console.log(await require("./events/subscriptions").list(true));
 	app.post("/notification", async (req, res) => {
 		console.log("Salut !");
@@ -38,6 +39,9 @@ async function main() {
 							break;
 						case "channel.follow":
 							console.log("Follow!");
+							break;
+						case "channel.channel_points_custom_reward_redemption.add":
+							await require("./events/channel_points").handle(req.body.event);
 							break;
 						default:
 							console.warn(`Unhandled error : ${req.body.subscription.type}`);
