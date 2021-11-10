@@ -33,7 +33,7 @@ module.exports = {
 						console.log("complete presque");
 						await completed(true, data.user_name);
 						console.log("Je sais pas ce que je fais");
-						await require("../chat_bot").say(`C'est trop bien hihi bravo ${user_name}!`);
+						await require("../chat_bot").say(`C'est trop bien hihi bravo!`);
 						console.log("Je crois que ça crash autre part ");
 					} catch (error) {
 						console.log("ERROR");
