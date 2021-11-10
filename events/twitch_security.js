@@ -16,7 +16,7 @@ module.exports = {
 	getUserToken: () => {
 		return new Promise(async (resolve, reject) => {
 			const app = express();
-			const scopes = ["channel.channel_points_custom_reward_redemption.add"];
+			const scopes = ["channel:manage:redemptions"];
 			var server;
 
 			if (fs.existsSync("./.token.json")) {
@@ -34,7 +34,6 @@ module.exports = {
 						return true;
 					} else return false;
 				}
-
 				if (checkScopes()) {
 					try {
 						await module.exports.userTokenValidate(content);
