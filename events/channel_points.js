@@ -1,3 +1,4 @@
+const axios = require('axios').default;
 
 module.exports = {
 	register : (userId) => {
@@ -32,10 +33,10 @@ module.exports = {
 		return new Promise((resolve, reject) => {
 			axios({
 				method: "POST",
-				url: `https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id=${process.env["TWITCH_CHANNEL_ID"]}`,
+				url: `https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id=${process.env["CHANNEL_ID"]}`,
 				headers: {
 					"Content-Type": "application/json",
-					"Client-ID": process.env["TWITCH_CLIENT_ID"],
+					"Client-ID": process.env["CLIENT_ID"],
 					Authorization: "Bearer " + global.userToken.access_token,
 				},
 				data: {

@@ -9,7 +9,8 @@ async function main() {
 	global.userToken = await require("./events/twitch_security").getUserToken();	
 	console.log("User token");
 	console.log(global.userToken);
-	await require("./events/getters").getUserInfos();
+
+	// await require("./events/channel_points").createReward("channel_test", 1);
 
 	// cron.schedule("0 */2 * * *", async () => {
 	// 	global.appToken = await require("./lib/twitchSecurity").getAppToken();
