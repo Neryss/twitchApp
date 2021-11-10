@@ -16,13 +16,13 @@ module.exports = {
 	handle : (data) => {
 		return new Promise(async (resolve, reject) => {
 			console.log(data);
-			function completed(status, username) {
+			function completed(status, user_name) {
 				return new Promise(async (resolve) => {
 					if (status)
 						await require("./channel_points").validateRedemption(data.id, data.reward.id);
 					else {
 						await require("./channel_points").cancelRedemption(data.id, data.reward.id);
-						await require("../chat_bot").say(`${username} Oh oh petit problème, tu es remboursé t'en fais pas !`);
+						await require("../chat_bot").say(`${user_name} Oh oh petit problème, tu es remboursé t'en fais pas !`);
 					}
 					resolve();
 				});
@@ -33,7 +33,7 @@ module.exports = {
 						console.log("complete presque");
 						await completed(true, data.user_name);
 						console.log("Je sais pas ce que je fais");
-						// await require("../chat_bot").say(`C'est trop bien hihi bravo ${username}!`);
+						await require("../chat_bot").say(`C'est trop bien hihi bravo ${user_name}!`);
 						console.log("Je crois que ça crash autre part ");
 					} catch (error) {
 						console.log("ERROR");

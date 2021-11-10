@@ -9,6 +9,8 @@ async function main() {
 	global.userToken = await require("./events/twitch_security").getUserToken();	
 	console.log("User token");
 	console.log(global.userToken);
+	await require("./chat_bot").setup();
+	await require("./chat_bot").say("salut");
 
 	// await require("./events/channel_points").createReward("channel_test", 1);
 

@@ -12,9 +12,6 @@ const opts = {
 };
 
 const client = new tmi.client(opts);
-client.on("message", onMessageHandler);
-client.on("connected", onConnectedHandler);
-client.connect();
 
 function ft_owo(target, context, msg, self)
 {
@@ -59,10 +56,24 @@ function	onConnectedHandler(addr, port) {
 	console.log(`Connected to ${addr}:${port}`);
 }
 
-// module.exports = {
-// 	say: (msg) => {
-// 		return new Promise(async (resolve) => {
-// 			resolve(await client.say(process.env["CHANNEL_NAME"], msg));
-// 		});
-// 	},
-// }
+module.exports = {
+	say: (msg) => {
+		return new Promise(async (resolve) => {
+			resolve(await client.say(process.env["CHANNEL_NAME"], msg));
+		});
+	},
+	setup: () => {
+		return new Promise((resolve, reject) => {
+			client.on("connected", (addr, port) => {
+				console.info(`Connected to ${addr}:${port}`);
+			});
+			client.on("join", (channel, username, self) => {
+				if (self) {
+					resolve();
+				}
+			});
+			client.on("message", onMessageHandler);
+			client.connect();
+		});
+	},
+}
