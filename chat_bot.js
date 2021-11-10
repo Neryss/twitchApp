@@ -6,7 +6,6 @@ const opts = {
 		username: process.env.USERNAME,
 		password: process.env.PASSWORD
 	},
-	connection: {reconnect: true},
 	channels: [
 		process.env.CHANNEL_NAME
 	]
@@ -60,10 +59,10 @@ function	onConnectedHandler(addr, port) {
 	console.log(`Connected to ${addr}:${port}`);
 }
 
-module.exports = {
-	say: (msg) => {
-		return new Promise(async (resolve) => {
-			resolve(await client.say(process.env["CHANNEL_NAME"], msg));
-		});
-	},
-}
+// module.exports = {
+// 	say: (msg) => {
+// 		return new Promise(async (resolve) => {
+// 			resolve(await client.say(process.env["CHANNEL_NAME"], msg));
+// 		});
+// 	},
+// }

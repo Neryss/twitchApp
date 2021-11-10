@@ -25,8 +25,26 @@ module.exports = {
 						await require("../chat_bot").say(`${username} Oh oh petit problème, tu es remboursé t'en fais pas !`);
 					}
 					resolve();
-				})
+				});
 			}
+			switch (data.reward.title) {
+				case "channel_test" :
+					try {
+						console.log("complete presque");
+						await completed(true, data.user_name);
+						console.log("Je sais pas ce que je fais");
+						// await require("../chat_bot").say(`C'est trop bien hihi bravo ${username}!`);
+						console.log("Je crois que ça crash autre part ");
+					} catch (error) {
+						console.log("ERROR");
+						await completed(false, data.user_name);
+						reject(error);
+					}
+					break;
+				default:
+					break;
+			}
+			resolve();
 		})
 	},
 	createReward: (title, cost) => {
@@ -58,10 +76,10 @@ module.exports = {
 		return new Promise((resolve, reject) => {
 			axios({
 				method: "PATCH",
-				url: `https://api.twitch.tv/helix/channel_points/custom_rewards/redemptions?broadcaster_id=${process.env["TWITCH_CHANNEL_ID"]}&reward_id=${reward_id}&id=${id}`,
+				url: `https://api.twitch.tv/helix/channel_points/custom_rewards/redemptions?broadcaster_id=${process.env["CHANNEL_ID"]}&reward_id=${reward_id}&id=${id}`,
 				headers: {
 					"Content-Type": "application/json",
-					"Client-ID": process.env["TWITCH_CLIENT_ID"],
+					"Client-ID": process.env["CLIENT_ID"],
 					Authorization: "Bearer " + global.userToken.access_token,
 				},
 				data: {
@@ -81,10 +99,10 @@ module.exports = {
 		return new Promise((resolve, reject) => {
 			axios({
 				method: "PATCH",
-				url: `https://api.twitch.tv/helix/channel_points/custom_rewards/redemptions?broadcaster_id=${process.env["TWITCH_CHANNEL_ID"]}&reward_id=${reward_id}&id=${id}`,
+				url: `https://api.twitch.tv/helix/channel_points/custom_rewards/redemptions?broadcaster_id=${process.env["CHANNEL_ID"]}&reward_id=${reward_id}&id=${id}`,
 				headers: {
 					"Content-Type": "application/json",
-					"Client-ID": process.env["TWITCH_CLIENT_ID"],
+					"Client-ID": process.env["CLIENT_ID"],
 					Authorization: "Bearer " + global.userToken.access_token,
 				},
 				data: {
