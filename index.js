@@ -6,8 +6,9 @@ async function main() {
 	const getAppToken = await require("./events/getters").getAppToken();
 	console.log(getAppToken);
 	global.app_token = await getAppToken;
-	// global.userToken = await require("./events/twitch_security").getUserToken();
-	// console.log("User token" + global.userToken);
+	global.userToken = await require("./events/twitch_security").getUserToken();	
+	console.log("User token");
+	console.log(global.userToken);
 	await require("./events/getters").getUserInfos();
 
 	// cron.schedule("0 */2 * * *", async () => {
@@ -28,7 +29,7 @@ async function main() {
 	);
 	await require("./events/stream_on").streamRegister(process.env["CHANNEL_ID"]);
 	await require("./events/follows").register(process.env["CHANNEL_ID"]);
-	// await require("./events/channel_points").register(process.env["CHANNEL_ID"]);
+	await require("./events/channel_points").register(process.env["CHANNEL_ID"]);
 	// console.log(await require("./events/subscriptions").list(true));
 	app.post("/notification", async (req, res) => {
 		console.log("Salut !");
