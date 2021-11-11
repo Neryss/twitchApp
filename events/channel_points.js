@@ -30,13 +30,11 @@ module.exports = {
 			switch (data.reward.title) {
 				case "channel_test" :
 					try {
-						console.log("complete presque");
 						await completed(true, data.user_name);
-						console.log("Je sais pas ce que je fais");
 						await require("../chat_bot").say(`C'est trop bien hihi bravo!`);
-						console.log("Je crois que ça crash autre part ");
+						await require("./nox").sendPic();
 					} catch (error) {
-						console.log("ERROR");
+						console.error("ERROR");
 						await completed(false, data.user_name);
 						reject(error);
 					}
