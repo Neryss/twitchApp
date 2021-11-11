@@ -28,7 +28,7 @@ module.exports = {
 				});
 			}
 			switch (data.reward.title) {
-				case "channel_test" :
+				case "Photo de Nox uwu" :
 					try {
 						await require("../chat_bot").say(`C'est trop bien hihi bravo!`);
 						if (!await require("./nox").sendPic())
