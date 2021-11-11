@@ -3,35 +3,29 @@ const { resolve } = require("path");
 
 module.exports = {
 	sendPic: () => {
-		times = 0;
 		parse = 1;
+		tested  = [];
 		return new Promise (async (resolve) => {
 			fs.readFile("./resources/nox.json", async function getPic(err, data) {
 				try {
-					console.log(data);
 					if (parse)
-					{
-						console.log("Parsing inc");
 						data = JSON.parse(data);
-					}
-					// console.log(Object.keys(data).length);
 					selected = data[[Math.floor(Math.random() * (Object.keys(data).length))]]
 					console.log("selected : ");
 					console.log(selected);
 					if (!selected.sent)
 					{
-						console.log("Done");
+						console.log(selected.sent);
 						selected.sent = true;
-						await require("../chat_bot").say(`Hop cadeau chef !\nhttps://neryss.pw/Nox_stream/${selected.url}`);
-						if (parse)
-							fs.writeFileSync("./resources/nox.json", JSON.stringify(data, null, 4));
-						// else
-						// 	fs.writeFileSync("./resources/nox.json", data);
+						console.log(selected.sent);
+						await require("../chat_bot").say(`Meow chef !\nhttps://neryss.pw/Nox_stream/${selected.url}`);
+						fs.writeFileSync("./resources/nox.json", JSON.stringify(data, null, 4));
 						resolve(0);
 					}
-					else if (times < Object.keys(data).length)
+					else if (tested.length < Object.keys(data).length)
 					{
-						times++;
+						if (!tested.includes(selected.id))
+							tested.push(selected.id);
 						console.log("None found");
 						parse = 0;
 						resolve (getPic(err, data, 0));
