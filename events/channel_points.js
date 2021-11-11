@@ -30,9 +30,14 @@ module.exports = {
 			switch (data.reward.title) {
 				case "channel_test" :
 					try {
-						await completed(true, data.user_name);
 						await require("../chat_bot").say(`C'est trop bien hihi bravo!`);
-						await require("./nox").sendPic();
+						if (!await require("./nox").sendPic())
+							await completed(true, data.user_name);
+						else
+						{
+							await completed(false, data.user_name);
+							resolve();
+						}
 					} catch (error) {
 						console.error("ERROR");
 						await completed(false, data.user_name);
