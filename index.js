@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require("express");
-const cron = require("cron");
+const cron = require("node-cron");
 	
 async function main() {
 	const getAppToken = await require("./events/getters").getAppToken();
