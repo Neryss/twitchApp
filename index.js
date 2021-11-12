@@ -14,12 +14,12 @@ async function main() {
 
 	// await require("./events/channel_points").createReward("channel_test", 1);
 
-	// cron.schedule("0 */2 * * *", async () => {
-	// 	global.appToken = await require("./lib/twitchSecurity").getAppToken();
-	// 	global.userToken = await require("./lib/twitchSecurity").refreshToken(
-	// 		global.userToken
-	// 	);
-	// });
+	cron.schedule("0 */2 * * *", async () => {
+		global.appToken = await require("./events/twitch_security").getAppToken();
+		global.userToken = await require("./events/twitch_security").refreshToken(
+			global.userToken
+		);
+	});
 
 	const app = express();
 	

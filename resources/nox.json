@@ -27,17 +27,17 @@
     {
         "id": 5,
         "url": "IMG_20200417_125017.jpg",
-        "sent": false
+        "sent": true
     },
     {
         "id": 6,
         "url": "IMG_20210202_194336.jpg",
-        "sent": false
+        "sent": true
     },
     {
         "id": 7,
         "url": "IMG_20210827_153645_1.jpg",
-        "sent": false
+        "sent": true
     },
     {
         "id": 8,
@@ -62,7 +62,7 @@
     {
         "id": 12,
         "url": "IMG-20200909-WA0009.jpg",
-        "sent": false
+        "sent": true
     },
     {
         "id": 13,
@@ -77,7 +77,7 @@
     {
         "id": 15,
         "url": "IMG_20211025_210523.jpg",
-        "sent": false
+        "sent": true
     },
     {
         "id": 16,
@@ -122,6 +122,6 @@
     {
         "id": 24,
         "url": "IMG_20210723_222153.jpg",
-        "sent": false
+        "sent": true
     }
 ]
