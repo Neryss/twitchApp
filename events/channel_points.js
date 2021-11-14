@@ -30,7 +30,7 @@ module.exports = {
 			switch (data.reward.title) {
 				case "Photo de Nox uwu" :
 					try {
-						await require("../chat_bot").say(`C'est trop bien hihi bravo!`);
+						// await require("../chat_bot").say(`C'est trop bien hihi bravo!`);
 						if (!await require("./nox").sendPic())
 							await completed(true, data.user_name);
 						else
