@@ -3,14 +3,9 @@ const express = require("express");
 const cron = require("node-cron");
 	
 async function main() {
-	const getAppToken = await require("./events/getters").getAppToken();
-	console.log(getAppToken);
-	global.app_token = await getAppToken;
-	global.userToken = await require("./events/twitch_security").getUserToken();	
-	console.log("User token");
-	console.log(global.userToken);
+	global.app_token = await require("./events/getters").getAppToken();
+	global.userToken = await require("./events/twitch_security").getUserToken();
 	await require("./chat_bot").setup();
-	await require("./chat_bot").say("salut");
 
 	// await require("./events/channel_points").createReward("channel_test", 1);
 
@@ -22,7 +17,6 @@ async function main() {
 	});
 
 	const app = express();
-	
 	app.use(
 		express.json({
 			verify: (req, res, buf) => {
