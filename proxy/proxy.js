@@ -48,14 +48,9 @@ https
 					res.end();
 					return ;
 				}
-				// else if (host == `twitch.${domainName}`)
-				// 	target = {}
 				else if (host == `twitch.${domainName}`)
 					target = {
-						host:
-							// process.env["NODE_ENV"] == "debug"
-							// 	? "192.168.1.24"
-								"localhost",
+						host: "localhost",
 						port: "4000",
 					};
 				else if (host == domainName)
