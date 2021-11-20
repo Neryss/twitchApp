@@ -36,8 +36,9 @@ module.exports = {
 				}
 				if (checkScopes()) {
 					try {
+						console.log("Inside scopes");
 						await module.exports.userTokenValidate(content);
-						resolve(await module.exports.refreshToken(content));
+						resolve (await module.exports.refreshToken(content));
 					} catch (error) {
 						console.error("error" + error);
 						newToken();

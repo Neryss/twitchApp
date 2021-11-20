@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require("express");
 const cron = require("node-cron");
+const schedule = require("node-schedule");
 	
 async function main() {
 	global.app_token = await require("./events/getters").getAppToken();
@@ -9,11 +10,13 @@ async function main() {
 
 	// await require("./events/channel_points").createReward("channel_test", 1);
 
-	cron.schedule("0 */2 * * *", async () => {
-		global.appToken = await require("./events/twitch_security").getAppToken();
+	schedule.scheduleJob("0 */2 * * *", async () => {
+		console.log("Cron going one");
+		global.appToken = await require("./events/getters").getAppToken();
+		console.log("App token done");
 		global.userToken = await require("./events/twitch_security").refreshToken(
 			global.userToken
-		);
+			);
 	});
 
 	const app = express();
