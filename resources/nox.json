@@ -17,12 +17,12 @@
     {
         "id": 3,
         "url": "IMG_20210802_040343.jpg",
-        "sent": false
+        "sent": true
     },
     {
         "id": 4,
         "url": "IMG-20200629-WA0000.jpg",
-        "sent": false
+        "sent": true
     },
     {
         "id": 5,
@@ -57,7 +57,7 @@
     {
         "id": 11,
         "url": "IMG_20210920_191056.jpg",
-        "sent": false
+        "sent": true
     },
     {
         "id": 12,
@@ -112,7 +112,7 @@
     {
         "id": 22,
         "url": "IMG-20201203-WA0006.jpg",
-        "sent": false
+        "sent": true
     },
     {
         "id": 23,

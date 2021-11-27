@@ -32,7 +32,6 @@ async function main() {
 	await require("./events/channel_points").register(process.env["CHANNEL_ID"]);
 	// console.log(await require("./events/subscriptions").list(true));
 	app.post("/notification", async (req, res) => {
-		console.log("Salut !");
 		if (process.env["DEBUG"] == "true" || require("./events/twitch_security").verifySignature(
 			req.header("Twitch-Eventsub-Message-Signature"),
 			req.header("Twitch-Eventsub-Message-Id"),
@@ -51,9 +50,9 @@ async function main() {
 							break;
 						case "channel.follow":
 							console.log("Follow!");
+							await require("./events/follows").handle(req.body.event);
 							break;
 						case "channel.channel_points_custom_reward_redemption.add":
-							console.log("Hihi je suis là");
 							await require("./events/channel_points").handle(req.body.event);
 							break;
 						default:

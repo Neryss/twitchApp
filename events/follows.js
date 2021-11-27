@@ -1,3 +1,6 @@
+const { resolve } = require("discord.js/src/util/Intents");
+const axios = require('axios').default;
+
 module.exports = {
 	register: (userId) => {
 		return new Promise(async (resolve, reject) => {
@@ -13,4 +16,35 @@ module.exports = {
 			}
 		});
 	},
+	getFollowersGoals: (userId) => {
+		return new Promise((resolve, reject) => {
+			axios({
+				method: "GET",
+				url: `https://api.twitch.tv/helix/goals?broadcaster_id=${userId}`,
+				headers: {
+					"Content-Type": "application/json",
+					"Client-ID": process.env["CLIENT_ID"],
+					Authorization: "Bearer " + global.userToken.access_token,
+				},
+			})
+				.then((res) => {
+					let list = res.data.data;
+					for (let index = 0; index < list.length; index++) {
+						const element = list[index];
+						if (element.type == "follower") resolve(element);
+					}
+					resolve(undefined);
+				})
+				.catch((error) => {
+					console.error(error);
+					reject(error);
+				});
+		});
+	},
+	handle: (data) => {
+		return new Promise(async (resolve, reject) => {
+			let goal = await require("./follows").getFollowersGoals(process.env["CHANNEL_ID"]);
+			let goalExt = goal ? `${goal.current_amount}/${goal.target_amount}` : "";
+		})
+	}
 }

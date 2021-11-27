@@ -16,7 +16,7 @@ module.exports = {
 	getUserToken: () => {
 		return new Promise(async (resolve, reject) => {
 			const app = express();
-			const scopes = ["channel:manage:redemptions"];
+			const scopes = ["channel:manage:redemptions", "channel:read:goals"];
 			var server;
 
 			if (fs.existsSync("./.token.json")) {
