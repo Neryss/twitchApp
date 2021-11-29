@@ -40,11 +40,5 @@ module.exports = {
 					reject(error);
 				});
 		});
-	},
-	handle: (data) => {
-		return new Promise(async (resolve, reject) => {
-			let goal = await require("./follows").getFollowersGoals(process.env["CHANNEL_ID"]);
-			let goalExt = goal ? `${goal.current_amount}/${goal.target_amount}` : "";
-		})
 	}
 }

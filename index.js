@@ -1,8 +1,9 @@
 require('dotenv').config();
 const express = require("express");
+const res = require('express/lib/response');
 const cron = require("node-cron");
 const schedule = require("node-schedule");
-	
+
 async function main() {
 	global.app_token = await require("./events/getters").getAppToken();
 	global.userToken = await require("./events/twitch_security").getUserToken();
@@ -50,7 +51,6 @@ async function main() {
 							break;
 						case "channel.follow":
 							console.log("Follow!");
-							await require("./events/follows").handle(req.body.event);
 							break;
 						case "channel.channel_points_custom_reward_redemption.add":
 							await require("./events/channel_points").handle(req.body.event);
@@ -71,6 +71,12 @@ async function main() {
 			res.status(403).send("Forbidden");
 		}
 	});
+	app.get("/test", async (request, response) => {
+		console.log("salut");
+		let goal = await require("./events/follows").getFollowersGoals(process.env["CHANNEL_ID"]);
+		let goalExt = goal ? `${goal.current_amount}/${goal.target_amount}` : "";
+		response.send(goalExt);
+	})
 	app.listen(process.env["PORT"], () => {
 		console.info(`Event server listening on port : ${process.env["PORT"]}`);
 	});
