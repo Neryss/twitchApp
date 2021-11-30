@@ -51,6 +51,8 @@ async function main() {
 							break;
 						case "channel.follow":
 							console.log("Follow!");
+							await require("./events/follows").getFollowersGoals(process.env["CHANNEL_ID"]);
+							await require("./events/follows").getLastFollower(process.env["CHANNEL_ID"]);
 							break;
 						case "channel.channel_points_custom_reward_redemption.add":
 							await require("./events/channel_points").handle(req.body.event);
@@ -76,6 +78,15 @@ async function main() {
 		let goal = await require("./events/follows").getFollowersGoals(process.env["CHANNEL_ID"]);
 		let goalExt = goal ? `${goal.current_amount}/${goal.target_amount}` : "";
 		response.send(goalExt);
+	})
+	app.get("/latest", async (request, response) => {
+		let latest = await require("./events/follows").getLastFollower(process.env["CHANNEL_ID"]);
+		response.send(latest);
+	})
+	app.get("/game", async (request, response) => {
+		let game = await require("./events/getters").getChannel(process.env["CHANNEL_ID"]);
+		console.log(game.data[0].game_name);
+		response.send(game.data[0].game_name);
 	})
 	app.listen(process.env["PORT"], () => {
 		console.info(`Event server listening on port : ${process.env["PORT"]}`);

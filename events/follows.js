@@ -40,5 +40,26 @@ module.exports = {
 					reject(error);
 				});
 		});
+	},
+	getLastFollower: (userId) => {
+		return new Promise((resolve, reject) => {
+			axios({
+				method: "GET",
+				url: `https://api.twitch.tv/helix/users/follows?to_id=${userId}`,
+				headers: {
+					"Content-Type": "application/json",
+					"Client-ID": process.env["CLIENT_ID"],
+					Authorization: "Bearer " + global.userToken.access_token,
+				},
+			})
+				.then((res) => {
+					console.log(res.data.data[0].from_name);
+					resolve(res.data.data[0].from_name);
+				})
+				.catch((err) => {
+					console.error(err);
+					reject(err);
+				});
+		});
 	}
 }
