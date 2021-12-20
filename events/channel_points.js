@@ -32,9 +32,13 @@ module.exports = {
 					try {
 						// await require("../chat_bot").say(`C'est trop bien hihi bravo!`);
 						if (!await require("./nox").sendPic())
+						{
+							console.log("Complete!")
 							await completed(true, data.user_name);
+						}
 						else
 						{
+							console.log("Nope");
 							await completed(false, data.user_name);
 							resolve();
 						}

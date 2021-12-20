@@ -53,6 +53,8 @@ https
 						host: "localhost",
 						port: "4000",
 					};
+				else if (host == `files.${domainName}`)
+					target = { host: "localhost", port: "3000" }
 				else if (host == domainName)
 					target = { host: "localhost", port: "3000" };
 				else {

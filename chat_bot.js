@@ -30,8 +30,6 @@ function onMessageHandler(target, context, msg, self) {
 	if (self)
 		return ;
 	const commandName = msg.trim();
-	console.log(context);
-	console.log(msg);
 	if (commandName == "!discord")
 		client.say(target, "Le discord : discord.neryss.pw");
 	else if (commandName == "!gogo")

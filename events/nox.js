@@ -24,11 +24,14 @@ module.exports = {
 					}
 					else if (tested.length < Object.keys(data).length)
 					{
+						console.log(tested.length);
+						console.log(Object.keys(data).length);
+						console.log("Tested.leng < obj len");
 						if (!tested.includes(selected.id))
 							tested.push(selected.id);
 						console.log("None found");
 						parse = 0;
-						resolve (getPic(err, data, 0));
+						resolve (await getPic(err, data, 0));
 					}
 					else
 					{
