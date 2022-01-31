@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require("express");
 const res = require('express/lib/response');
-const cron = require("node-cron");
 const schedule = require("node-schedule");
 
 async function main() {
