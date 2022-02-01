@@ -77,15 +77,6 @@ async function main() {
 
 		console.log("Headers :");
 		console.log(req.headers);
-		// console.log("TWITCH_HOSTNAME :");
-		// console.log(process.env["TWITCH_HOSTNAME"]);
-		// console.log(require("./events/twitch_security").verifySignature(
-		// 	req.header("Twitch-Eventsub-Message-Signature"),
-		// 	req.header("Twitch-Eventsub-Message-Id"),
-		// 	req.header("Twitch-Eventsub-Message-Timestamp"),
-		// 	req.rawBody
-		// ));
-
 		console.log("DEBUG = " + process.env['DEBUG']);
 		if (process.env["DEBUG"] == "true" || require("./events/twitch_security").verifySignature(
 			req.header("Twitch-Eventsub-Message-Signature"),
