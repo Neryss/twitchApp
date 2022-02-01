@@ -15,6 +15,7 @@ module.exports = {
 	},
 	handle: (data) => {
 		return new Promise(async (resolve, reject) => {
+			console.log("OH UI");
 			const webhook = new discord.WebhookClient({url: process.env["DISCORD_WEBHOOK_ANNOUNCES"]});
 			let fetched = await Promise.all([
 				require("./getters").getChannel(data.broadcaster_user_id),

@@ -3,7 +3,6 @@ const axios = require('axios').default;
 module.exports = {
 	getAppToken: () => {
 		return new Promise(async (resolve, reject) => {
-			console.log("WTF");
 			const client_id = process.env["CLIENT_ID"];
 			const client_secret = process.env["CLIENT_SECRET"];
 			console.log("Waiting for token...");

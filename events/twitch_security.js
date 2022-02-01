@@ -6,13 +6,15 @@ const fs = require("fs");
 
 module.exports = {
 	verifySignature: (messageSignature, messageID, messageTimestamp, body) => {
-		let message = messageID + messageTimestamp + body;
-		let signature = crypto
-		.createHmac("sha256", sha256(process.env["HOSTNAME"]))
-		.update(message);
-		let expectedSignatureHeader = "sha256=" + signature.digest("hex");
-		return expectedSignatureHeader === messageSignature;
-	},
+		if (!messageSignature || !messageTimestamp)
+			return false;
+        let message = messageID + messageTimestamp + body;
+        let signature = crypto
+            .createHmac("sha256", sha256(process.env["TWITCH_HOSTNAME"]))
+            .update(message);
+        let expectedSignatureHeader = "sha256=" + signature.digest("hex");
+        return crypto.timingSafeEqual(Buffer.from(expectedSignatureHeader), Buffer.from(messageSignature));
+    },
 	getUserToken: () => {
 		return new Promise(async (resolve, reject) => {
 			const app = express();

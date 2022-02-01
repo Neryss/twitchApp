@@ -4,6 +4,8 @@ const sha256 = require('sha256');
 module.exports = {
 	register: (userId, type) => {
 		return new Promise(async (resolve, reject) => {
+
+			console.log("owo : " + `https://${process.env["TWITCH_HOSTNAME"]}/notification`);
 			axios({
 				method: "POST",
 				url: "https://api.twitch.tv/helix/eventsub/subscriptions",
@@ -18,8 +20,8 @@ module.exports = {
 					condition: {broadcaster_user_id: userId},
 					transport: {
 						method: "webhook",
-						callback: `https://${process.env["HOSTNAME"]}/notification`,
-						secret: sha256(process.env["HOSTNAME"]),
+						callback: `https://${process.env["TWITCH_HOSTNAME"]}/notification`,
+						secret: sha256(process.env["TWITCH_HOSTNAME"]),
 					},
 				},
 			})
@@ -61,6 +63,43 @@ module.exports = {
 					console.error(error);
 					reject(error);
 				});
+		});
+	},
+	delete: (subId) => {
+		return new Promise((resolve, reject) => {
+			axios({
+				method: "DELETE",
+				url: `https://api.twitch.tv/helix/eventsub/subscriptions?id=${subId}`,
+				headers: {
+					"Content-Type": "application/json",
+					"Client-ID": process.env["CLIENT_ID"],
+					Authorization: "Bearer " + global.app_token.access_token,
+				},
+			})
+				.then((res) => {
+					console.info(`subsribtion ${subId} deleted`);
+					resolve();
+				})
+				.catch((error) => {
+					console.error(error);
+					reject(error);
+				});
+		});
+	},
+	deleteAll: () => {
+		return new Promise(async (resolve, reject) => {
+			const list = (await module.exports.list(true)).data;
+			for (let index = 0; index < list.length; index++) {
+				const sub = list[index];
+				try {
+					await module.exports.delete(sub.id);
+				} catch (error) {
+					console.error(error);
+					reject(error);
+				}
+			}
+			console.info(`all subsribtions are deleted`);
+			resolve();
 		});
 	},
 }
