@@ -13,6 +13,13 @@ module.exports = {
             .createHmac("sha256", sha256(process.env["TWITCH_HOSTNAME"]))
             .update(message);
         let expectedSignatureHeader = "sha256=" + signature.digest("hex");
+		console.log("begin----");
+		console.log(messageSignature);
+		console.log(messageID);
+		console.log(messageTimestamp);
+		console.log(body);
+		console.log(expectedSignatureHeader);
+		console.log("end----");
         return crypto.timingSafeEqual(Buffer.from(expectedSignatureHeader), Buffer.from(messageSignature));
     },
 	getUserToken: () => {

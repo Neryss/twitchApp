@@ -75,6 +75,7 @@ async function main() {
 
 	app.post("/notification", async (req, res) => {
 
+		console.log("Headers :");
 		console.log(req.headers);
 		// console.log("TWITCH_HOSTNAME :");
 		// console.log(process.env["TWITCH_HOSTNAME"]);
@@ -90,12 +91,13 @@ async function main() {
 			req.header("Twitch-Eventsub-Message-Signature"),
 			req.header("Twitch-Eventsub-Message-Id"),
 			req.header("Twitch-Eventsub-Message-Timestamp"),
-			req.rawBody
+			req.body
 		)) {
 			console.info("notification received");
 
 			let notification = JSON.parse(req.body);
 			if (MESSAGE_TYPE_VERIFICATION === req.headers[MESSAGE_TYPE]) {
+				console.log("pouet");
 				res.status(200).send(notification.challenge);
 				// console.log(await require("./events/subscriptions").list());
 			}
@@ -134,8 +136,13 @@ async function main() {
 					// res.status(500).send("Internal error");
 				}
 			}
+			else
+			{
+				console.log("undefined event");
+			}
 		}
 		else {
+			console.log("signature check failed");
 			res.status(403).send("Forbidden");
 		}
 	});
