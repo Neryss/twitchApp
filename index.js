@@ -3,6 +3,7 @@ const express = require("express");
 const res = require('express/lib/response');
 const schedule = require("node-schedule");
 const crypto = require('node:crypto');
+const { LOADIPHLPAPI } = require('node:dns');
 
 const TWITCH_MESSAGE_ID = 'Twitch-Eventsub-Message-Id'.toLowerCase();
 const TWITCH_MESSAGE_TIMESTAMP = 'Twitch-Eventsub-Message-Timestamp'.toLowerCase();
@@ -50,7 +51,7 @@ async function main() {
 	global.app_token = await require("./events/getters").getAppToken();
 	global.userToken = await require("./events/twitch_security").getUserToken();
 	await require("./chat_bot").setup();
-
+	console.log("done");
 	// await require("./events/channel_points").createReward("channel_test", 1);
 
 	schedule.scheduleJob("0 */2 * * *", async () => {
