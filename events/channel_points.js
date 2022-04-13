@@ -48,6 +48,25 @@ module.exports = {
 						reject(error);
 					}
 					break;
+				case "alt_tab" :
+					try {
+						if (await require("./keyboard").altTab())
+						{
+							console.log(`Alt tab complete!`)
+							await completed(true, data.user_name);
+						}
+						else
+						{
+							console.log(`Alt tab failed`)
+							await completed(false, data.user_name)
+							resolve()
+						}
+					}
+					catch (error) {
+						console.log("ERROR during alt tab")
+						await completed(false, data.user_name)
+						reject(error)
+					}
 				default:
 					break;
 			}

@@ -52,7 +52,7 @@ async function main() {
 	global.userToken = await require("./events/twitch_security").getUserToken();
 	await require("./chat_bot").setup();
 	console.log("done");
-	// await require("./events/channel_points").createReward("channel_test", 1);
+	// await require("./events/channel_points").createReward("alt_tab", 1);
 
 	schedule.scheduleJob("0 */2 * * *", async () => {
 		console.log("Cron going one");
