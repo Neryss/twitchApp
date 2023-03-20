@@ -43,11 +43,13 @@ function onMessageHandler(target, context, msg, self) {
 	else if (commandName == "!reseaux")
 		client.say(target, "https://twitter.com/Neryss002\nhttps://www.tiktok.com/@neryss002");
 	else if (commandName == "!modpack")
-		// client.say(target, "Enigmatica6 :\nhttps://www.curseforge.com/minecraft/modpacks/enigmatica6");
+		client.say(target, "Enigmatica6 :\nhttps://www.curseforge.com/minecraft/modpacks/enigmatica6");
 		// client.say(target, "ATM6 :\nhttps://www.curseforge.com/minecraft/modpacks/all-the-mods-6");
-		client.say(target, "RagnamodVI : \n https://www.curseforge.com/minecraft/modpacks/ragnamod-vi");
+		// client.say(target, "RagnamodVI : \n https://www.curseforge.com/minecraft/modpacks/ragnamod-vi");
 	else if (commandName == "!squad")
 		client.say(target, "https://kadgar.net/live/neryss002/gogolegamerzz");
+	else if (commandName.includes("quoi") || commandName.includes("koi"))
+		client.say(target, "feur")
 }
 
 function	onConnectedHandler(addr, port) {

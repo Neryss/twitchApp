@@ -15,7 +15,6 @@ module.exports = {
 	},
 	handle : (data) => {
 		return new Promise(async (resolve, reject) => {
-			console.log(data);
 			function completed(status, user_name) {
 				return new Promise(async (resolve) => {
 					if (status)
@@ -52,13 +51,13 @@ module.exports = {
 					try {
 						if (await require("./keyboard").altTab())
 						{
-							console.log(`Alt tab complete!`)
+							console.log(`Alt tab complete!`);
 							await completed(true, data.user_name);
 						}
 						else
 						{
-							console.log(`Alt tab failed`)
-							await completed(false, data.user_name)
+							console.log(`Alt tab failed`);
+							await completed(false, data.user_name);
 							resolve()
 						}
 					}
@@ -67,6 +66,28 @@ module.exports = {
 						await completed(false, data.user_name)
 						reject(error)
 					}
+					break;
+				case "Drop son arme" :
+					try {
+						if (await require("./keyboard").dropWeapon())
+						{
+							console.log(`Weapon dropped!`);
+							await completed(true, data.user_name);
+						}
+						else
+						{
+							console.log(`Weapon drop failed!`);
+							await completed(false, data.user_name);
+							resolve();
+						}
+						break;
+					}
+					catch (error) {
+						console.log(`Error during weapon: ${error}`);
+						await completed(false, data.user_name);
+						reject(error);
+					}
+					break;
 				default:
 					break;
 			}
