@@ -30,7 +30,7 @@ module.exports = {
 				case "Photo de Nox uwu" :
 					try {
 						// await require("../chat_bot").say(`C'est trop bien hihi bravo!`);
-						if (!await require("./nox").sendPic())
+						if (!await require("./nox").sendPic(data.user_name))
 						{
 							console.log("Complete!")
 							await completed(true, data.user_name);
