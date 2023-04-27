@@ -1,17 +1,17 @@
 [
     {
         "name": "3502B5CC-739C-4A4C-AE08-F1DAC6C41752.jpg",
-        "sent": true,
+        "sent": false,
         "id": 0
     },
     {
         "name": "IMG_1195.jpg",
-        "sent": true,
+        "sent": false,
         "id": 1
     },
     {
         "name": "IMG_1209.jpg",
-        "sent": true,
+        "sent": false,
         "id": 2
     }
 ]
