@@ -3,9 +3,26 @@ const { resolve } = require("path");
 const discord = require('discord.js');
 const fetch = require('node-fetch');
 const formData = require('form-data');
+const res = require("express/lib/response");
+
+async function	countStats(files) {
+	var res = {
+		total: 0,
+		sent: 0
+	};
+	return new Promise (async (resolve) => {
+		for (var i = 0; i < Object.keys(files).length; i++)
+		{
+			res.total++;
+			if (files[i].sent)
+				res.sent++;
+			i++;
+		}
+		resolve(res);
+	})
+}
 
 module.exports = {
-	
 	sendPic: (user_name) => {
 		parse = 1;
 		tested  = [];
@@ -17,6 +34,7 @@ module.exports = {
 					selected = data[[Math.floor(Math.random() * (Object.keys(data).length))]]
 					console.log("selected : ");
 					console.log(selected);
+					stats = countStats(data);
 					if (!selected.sent)
 					{
 						console.log(selected.sent);
@@ -31,6 +49,9 @@ module.exports = {
 						embed.setTitle(`${user_name} a claim une photo de Nox!`);
 						embed.setTimestamp(Date.now());
 						embed.setImage(`attachment://pic.png`);
+						// embed.addFields(
+						// 	{ name: "photos disponibles :", value: `${stats.total - stats.sent + 1}`}
+						// );
 						await webhook.send({ embeds: [embed], files: [attachment] });
 						fs.writeFileSync("./resources/nox.json", JSON.stringify(data, null, 4));
 						resolve(0);
