@@ -46,16 +46,14 @@ function verifyMessage(hmac, verifySignature) {
 
 
 async function main() {
-	console.log(process.env);
-	// return
+	// console.log(process.env);
 	global.app_token = await require("./events/getters").getAppToken();
 	global.userToken = await require("./events/twitch_security").getUserToken();
 	await require("./chat_bot").setup();
-	console.log("done");
 	// await require("./events/channel_points").createReward("drop_weapon", 1);
 
 	schedule.scheduleJob("0 */2 * * *", async () => {
-		console.log("Cron going one");
+		console.log("Cron going on");
 		global.appToken = await require("./events/getters").getAppToken();
 		console.log("App token done");
 		global.userToken = await require("./events/twitch_security").refreshToken(
@@ -72,13 +70,9 @@ async function main() {
 	await require("./events/stream_on").streamRegister(process.env["CHANNEL_ID"]);
 	await require("./events/follows").register(process.env["CHANNEL_ID"]);
 	await require("./events/channel_points").register(process.env["CHANNEL_ID"]);
-	console.log(await require("./events/subscriptions").list(true));
+	// console.log(await require("./events/subscriptions").list(true));
 
 	app.post("/notification", async (req, res) => {
-
-		console.log("Headers :");
-		console.log(req.headers);
-		console.log("DEBUG = " + process.env['DEBUG']);
 		if (process.env["DEBUG"] == "true" || require("./events/twitch_security").verifySignature(
 			req.header("Twitch-Eventsub-Message-Signature"),
 			req.header("Twitch-Eventsub-Message-Id"),
@@ -89,19 +83,18 @@ async function main() {
 
 			let notification = JSON.parse(req.body);
 			if (MESSAGE_TYPE_VERIFICATION === req.headers[MESSAGE_TYPE]) {
-				console.log("pouet");
 				res.status(200).send(notification.challenge);
 				// console.log(await require("./events/subscriptions").list());
 			}
 			else if (MESSAGE_TYPE_REVOCATION === req.headers[MESSAGE_TYPE]) {
 				res.sendStatus(204);
-				console.log(`${notification.subscription.type} notifications revoked!`);
+				console.log(`Debug: ${notification.subscription.type} notifications revoked!`);
 				console.log(`reason: ${notification.subscription.status}`);
 				console.log(`condition: ${JSON.stringify(notification.subscription.condition, null, 4)}`);
 			}
 			else if (MESSAGE_TYPE_NOTIFICATION === req.headers[MESSAGE_TYPE]) {
-				console.log(`Event type: ${notification.subscription.type}`);
-				
+				// console.log(`Event type: ${notification.subscription.type}`);
+
 				res.sendStatus(204);
 				try {
 					console.log(notification);
@@ -130,16 +123,15 @@ async function main() {
 			}
 			else
 			{
-				console.log("undefined event");
+				console.log("Debug: undefined event");
 			}
 		}
 		else {
-			console.log("signature check failed");
+			console.log("Debug: signature check failed");
 			res.status(403).send("Forbidden");
 		}
 	});
 	app.get("/test", async (request, response) => {
-		console.log("salut");
 		let goal = await require("./events/follows").getFollowersGoals(process.env["CHANNEL_ID"]);
 		let goalExt = goal ? `${goal.current_amount}/${goal.target_amount}` : "";
 		response.send(goalExt);

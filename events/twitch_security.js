@@ -13,13 +13,13 @@ module.exports = {
             .createHmac("sha256", sha256(process.env["TWITCH_HOSTNAME"]))
             .update(message);
         let expectedSignatureHeader = "sha256=" + signature.digest("hex");
-		console.log("begin----");
-		console.log(messageSignature);
-		console.log(messageID);
-		console.log(messageTimestamp);
-		console.log(body);
-		console.log(expectedSignatureHeader);
-		console.log("end----");
+		// console.log("begin----");
+		// console.log(messageSignature);
+		// console.log(messageID);
+		// console.log(messageTimestamp);
+		// console.log(body);
+		// console.log(expectedSignatureHeader);
+		// console.log("end----");
         return crypto.timingSafeEqual(Buffer.from(expectedSignatureHeader), Buffer.from(messageSignature));
     },
 	getUserToken: () => {
@@ -45,11 +45,10 @@ module.exports = {
 				}
 				if (checkScopes()) {
 					try {
-						console.log("Inside scopes");
 						await module.exports.userTokenValidate(content);
 						resolve (await module.exports.refreshToken(content));
 					} catch (error) {
-						console.error("error" + error);
+						console.error("error: " + error);
 						newToken();
 					}
 				} else {
@@ -79,7 +78,7 @@ module.exports = {
 						},
 					})
 						.then((data) => {
-							console.log("Treating data");
+							console.log("Debug: treating data");
 							res.send("ok");
 							fs.writeFileSync(
 								"./.token.json",
@@ -133,7 +132,7 @@ module.exports = {
 	},
 	refreshToken: (token) => {
 		return new Promise((resolve, reject) => {
-			console.info("refreshing token...");
+			console.info("Debug: refreshing token...");
 			try {
 				axios({
 					method: "POST",
@@ -146,7 +145,7 @@ module.exports = {
 					},
 				})
 					.then((res) => {
-						console.info("token refreshed");
+						console.info("Debug: token refreshed");
 						fs.writeFileSync(
 							"./.token.json",
 							JSON.stringify(res.data),

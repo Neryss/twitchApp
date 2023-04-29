@@ -5,7 +5,7 @@ module.exports = {
 	register: (userId, type) => {
 		return new Promise(async (resolve, reject) => {
 
-			console.log("owo : " + `https://${process.env["TWITCH_HOSTNAME"]}/notification`);
+			// console.log("owo : " + `https://${process.env["TWITCH_HOSTNAME"]}/notification`);
 			axios({
 				method: "POST",
 				url: "https://api.twitch.tv/helix/eventsub/subscriptions",
@@ -26,7 +26,7 @@ module.exports = {
 				},
 			})
 			.then((res) => {
-				console.info(`EVENT : ${type} registed for user ${userId}`);
+				// console.info(`EVENT : ${type} registed for user ${userId}`);
 				resolve();
 			})
 			.catch((error) => {
