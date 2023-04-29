@@ -11,12 +11,12 @@ async function	countStats(files) {
 		sent: 0
 	};
 	return new Promise (async (resolve) => {
+		console.log("length: " + Object.keys(files).length);
 		for (var i = 0; i < Object.keys(files).length; i++)
 		{
 			res.total++;
 			if (files[i].sent)
 				res.sent++;
-			i++;
 		}
 		resolve(res);
 	})
@@ -30,12 +30,13 @@ module.exports = {
 			fs.readFile("./resources/nox.json", async function getPic(err, data) {
 				try {
 					if (parse)
-						data = JSON.parse(data);
+						var data = JSON.parse(data);
 					selected = data[[Math.floor(Math.random() * (Object.keys(data).length))]]
-					stats = await countStats(data);
+					
 					if (!selected.sent)
 					{
 						selected.sent = true;
+						stats = await countStats(data);
 						await require("../chat_bot").say(`Une photo de Nox a été claim par ${user_name}, disponible sur le Discord: discord.neryss.pw`);
 
 						const attachment = new discord.MessageAttachment(`./resources/photos/${selected.name}`, 'pic.png');
@@ -46,7 +47,7 @@ module.exports = {
 						embed.setTimestamp(Date.now());
 						embed.setImage(`attachment://pic.png`);
 						embed.addFields(
-							{ name: "photos disponibles :", value: `${stats.total - stats.sent + 1}`}
+							{ name: "photos disponibles :", value: `${stats.total - stats.sent}`}
 						);
 						await webhook.send({ embeds: [embed], files: [attachment] });
 						fs.writeFileSync("./resources/nox.json", JSON.stringify(data, null, 4));
