@@ -32,14 +32,10 @@ module.exports = {
 					if (parse)
 						data = JSON.parse(data);
 					selected = data[[Math.floor(Math.random() * (Object.keys(data).length))]]
-					console.log("selected : ");
-					console.log(selected);
-					stats = countStats(data);
+					stats = await countStats(data);
 					if (!selected.sent)
 					{
-						console.log(selected.sent);
 						selected.sent = true;
-						console.log(selected.sent);
 						await require("../chat_bot").say(`Une photo de Nox a été claim par ${user_name}, disponible sur le Discord: discord.neryss.pw`);
 
 						const attachment = new discord.MessageAttachment(`./resources/photos/${selected.name}`, 'pic.png');
@@ -49,21 +45,18 @@ module.exports = {
 						embed.setTitle(`${user_name} a claim une photo de Nox!`);
 						embed.setTimestamp(Date.now());
 						embed.setImage(`attachment://pic.png`);
-						// embed.addFields(
-						// 	{ name: "photos disponibles :", value: `${stats.total - stats.sent + 1}`}
-						// );
+						embed.addFields(
+							{ name: "photos disponibles :", value: `${stats.total - stats.sent + 1}`}
+						);
 						await webhook.send({ embeds: [embed], files: [attachment] });
 						fs.writeFileSync("./resources/nox.json", JSON.stringify(data, null, 4));
 						resolve(0);
 					}
 					else if (tested.length < Object.keys(data).length)
 					{
-						console.log(tested.length);
-						console.log(Object.keys(data).length);
-						console.log("Tested.leng < obj len");
 						if (!tested.includes(selected.id))
 							tested.push(selected.id);
-						console.log("None found");
+						console.log("Debug: no picture found");
 						parse = 0;
 						resolve (await getPic(err, data, 0));
 					}
