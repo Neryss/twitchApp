@@ -61,5 +61,10 @@ module.exports = {
 					reject(err);
 				});
 		});
+	},
+	testNotif: (user_name) => {
+		return new Promise((resolve, reject) => {
+			
+		})
 	}
 }

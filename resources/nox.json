@@ -1,17 +1,17 @@
 [
     {
         "name": "1F7FE11B-787F-4E4C-A7B7-2850520C31C7.jpg",
-        "sent": false,
+        "sent": true,
         "id": 0
     },
     {
         "name": "20F6C76B-36C9-4AD4-922B-12E5358B54D7.jpg",
-        "sent": false,
+        "sent": true,
         "id": 1
     },
     {
         "name": "2A303038-4496-40AE-B3A8-34DC70FAE398.jpg",
-        "sent": false,
+        "sent": true,
         "id": 2
     },
     {
@@ -31,12 +31,12 @@
     },
     {
         "name": "69F8624D-F3DE-4D79-886F-EA45172BFD83.jpg",
-        "sent": false,
+        "sent": true,
         "id": 6
     },
     {
         "name": "6BA3B990-4937-4DF1-8811-F092232F96D3.jpg",
-        "sent": false,
+        "sent": true,
         "id": 7
     },
     {
@@ -46,7 +46,7 @@
     },
     {
         "name": "99189557-054E-4DF7-903E-FBC0064BDEFE.jpg",
-        "sent": false,
+        "sent": true,
         "id": 9
     },
     {
@@ -61,7 +61,7 @@
     },
     {
         "name": "D76ACB54-386D-4AC7-B9CA-8265F50B4336.jpg",
-        "sent": false,
+        "sent": true,
         "id": 12
     },
     {
@@ -71,12 +71,12 @@
     },
     {
         "name": "IMG_0571.jpg",
-        "sent": false,
+        "sent": true,
         "id": 14
     },
     {
         "name": "IMG_0582.jpg",
-        "sent": false,
+        "sent": true,
         "id": 15
     },
     {
@@ -91,7 +91,7 @@
     },
     {
         "name": "IMG_0771.jpg",
-        "sent": false,
+        "sent": true,
         "id": 18
     },
     {
@@ -101,12 +101,12 @@
     },
     {
         "name": "IMG_0937.jpg",
-        "sent": false,
+        "sent": true,
         "id": 20
     },
     {
         "name": "IMG_1195.jpg",
-        "sent": false,
+        "sent": true,
         "id": 21
     },
     {
